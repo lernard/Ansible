@@ -57,11 +57,11 @@ data "aws_ami" "ubuntu-18_04" {
   }
 }
 
-# Defines that we store our tfstate in lernard-backend s3 bucket. This is optional, delete if desired.
-terraform {
-    backend "s3" {
-        bucket  = "lernard-backend"
-        key     = "Ansible"
-        region  = "us-east-1"
-    }
-}
+# Defines that we store our tfstate in lernard-backend s3 bucket. This is optional, so is commented out.
+# terraform {
+#     backend "s3" {
+#         bucket  = "lernard-backend"
+#         key     = "Ansible"
+#         region  = "us-east-1"
+#     }
+# }
