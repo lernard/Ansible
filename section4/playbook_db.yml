@@ -1,0 +1,10 @@
+---
+
+- name: Install MySQL
+  hosts: db
+  become: true
+
+  roles:
+    - common
+    - db
+

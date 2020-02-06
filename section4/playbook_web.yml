@@ -1,0 +1,10 @@
+---
+
+- name: Install Apache
+  hosts: web
+  become: true
+
+  roles:
+    - common
+    - web
+

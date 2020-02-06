@@ -21,6 +21,17 @@ resource "aws_instance" "webserver" {
     }
 }
 
+resource "aws_instance" "databaseserver" {
+    ami = data.aws_ami.ubuntu-18_04.id
+    instance_type   = "t2.micro"
+    key_name        = "lernard-key"
+    vpc_security_group_ids = [aws_security_group.db.id]
+
+    tags = {
+        Name = "lernard_databaseserver"
+    }
+}
+
 # Defines the allowed ports for our security group the server is attached to
 resource "aws_security_group" "web" {
     name        = "lernard_web"
@@ -50,8 +61,40 @@ resource "aws_security_group" "web" {
     }
 }
 
-output "ip_address" {
+resource "aws_security_group" "db" {
+    name        = "lernard_database"
+    description = "Allow all 3306"
+
+    ingress {
+        from_port   = 3306
+        to_port     = 3306
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port   = 22
+        to_port     = 22
+        protocol    = "tcp"
+        # Replace this with your own IP address
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+        from_port   = 0
+        to_port     = 65535
+        protocol    = "tcp"
+        # Replace this with your own IP address
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
+output "ip_address_web" {
     value = aws_instance.webserver.public_ip
+}
+
+output "ip_address_db" {
+    value = aws_instance.databaseserver.public_ip
 }
 
 # Gets us the most recent AMI image ID (operating system) that matches the search string below
