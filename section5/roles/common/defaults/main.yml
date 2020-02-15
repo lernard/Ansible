@@ -1,0 +1,10 @@
+---
+
+install_packages:
+  - name: vim
+  - name: net-tools
+  - name: tcpdump
+
+test_files:
+  - file: files/wibble
+    remotepath: /home/ubuntu/wibble

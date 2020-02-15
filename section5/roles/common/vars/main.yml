@@ -1,0 +1,7 @@
+---
+
+install_packages:
+  - name: vim
+  - name: net-tools
+  - name: tcpdump
+  - name: nano
