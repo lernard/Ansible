@@ -1,0 +1,85 @@
+---
+
+  - name: Install Apache
+    apt:
+      name: apache2
+      state: present
+      update_cache: yes
+  
+  - name: Allow port 22/SSH
+    iptables:
+      chain: INPUT
+      destination_port: "22"
+      jump: ACCEPT
+      protocol: tcp
+
+  - name: Allow port 80/HTTP
+    iptables:
+      chain: INPUT
+      destination_port: "{{ http_port | string }}"
+      jump: ACCEPT
+      protocol: tcp
+
+  - name: Allow port 443/HTTPS
+    iptables:
+      chain: INPUT
+      destination_port: "443"
+      jump: ACCEPT
+      protocol: tcp
+
+  - name: Allow established connections
+    iptables:
+      chain: INPUT
+      ctstate: ESTABLISHED,RELATED
+      jump: ACCEPT
+  
+  - name: Allow loopback traffic
+    iptables:
+      action: append
+      chain: INPUT
+      in_interface: lo
+      jump: ACCEPT
+
+  - name: Allow outgoing
+    iptables:
+      chain: OUTPUT
+      jump: ACCEPT
+
+  - name: Deny all incoming
+    iptables:
+      chain: INPUT
+      jump: DROP
+
+  - name: Create web root
+    file:
+      path: /var/www/{{ domain }}
+      state: directory
+      owner: ubuntu
+      group: ubuntu
+      mode: 0755
+
+  - name: Copy index.html to web root
+    copy:
+      src: files/index.html
+      dest: /var/www/{{ domain }}/index.html
+      owner: ubuntu
+      group: ubuntu
+      mode: 0755
+
+  - name: Add {{ domain }} config
+    template:
+      src: templates/{{ domain }}.conf.j2
+      dest: /etc/apache2/sites-available/{{ domain }}.conf
+      mode: 0755
+
+  - name: a2ensite {{ domain }}
+    command: a2ensite {{ domain }}
+    args:
+      creates: /etc/apache2/sites-enabled/{{ domain }}.conf
+    notify:
+      - restart apache2
+
+  - name: a2dissite default domain
+    command: a2dissite 000-default.conf
+    notify:
+      - restart apache2

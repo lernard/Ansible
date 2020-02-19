@@ -1,0 +1,8 @@
+<VirtualHost *:80>
+	ServerAdmin contact@lernard.com
+	ServerName {{ domain }}
+	ServerAlias {{ domain }}
+	DocumentRoot /var/www/{{ domain }}
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

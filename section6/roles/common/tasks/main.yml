@@ -1,0 +1,16 @@
+---
+
+  - name: Install vim
+    apt:
+      name: "{{ item.name }}"
+      state: present
+      update_cache: yes
+    with_items: "{{ install_packages }}"
+      
+      
+  - name: Copy over test file
+    copy:
+      src: "{{ item.file }}"
+      dest: "{{ item.remotepath }}"
+      mode: 0755
+    with_items: "{{ test_files }}"
