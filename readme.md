@@ -1,1 +1,2 @@
-# Ansible - Lernard.com ansible repository
+# Ansible - https://www.lernard.com Ansible course notes repository
+
